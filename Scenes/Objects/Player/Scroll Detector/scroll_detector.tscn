@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdnjub61nvcho"]
+
+[ext_resource type="Script" path="res://Scenes/Objects/Player/Scroll Detector/scroll_detector.gd" id="1_aekci"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eabgw"]
+size = Vector2(14, 22)
+
+[node name="ScrollDetector" type="Area2D"]
+collision_layer = 0
+collision_mask = 128
+script = ExtResource("1_aekci")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_eabgw")
+debug_color = Color(0.831618, 0.00139675, 0.941767, 0.42)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

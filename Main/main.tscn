@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dya7en5nagmnk"]
+
+[ext_resource type="Script" path="res://Main/main.gd" id="1_rwmrh"]
+[ext_resource type="PackedScene" uid="uid://dewsxap74uo3i" path="res://Scenes/PLACEHOLDER/Copyright Screen/copyright_screen_new.tscn" id="2_v2p1w"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_rwmrh")
+first_scene = ExtResource("2_v2p1w")
