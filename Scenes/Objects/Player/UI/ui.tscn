@@ -1,0 +1,380 @@
+[gd_scene load_steps=12 format=3 uid="uid://b3syn4jy34f3v"]
+
+[ext_resource type="Texture2D" uid="uid://bvcct6dy4gdb2" path="res://Assets/UI/Weapon Select/NES - Mega Man 3 - Weapons Menu.png" id="1_rlp4n"]
+[ext_resource type="Texture2D" uid="uid://c4sotbqljdlsb" path="res://Assets/Projectiles/Special Weapons/rock_buster.png" id="2_aos1n"]
+[ext_resource type="FontFile" uid="uid://bv7wt3hxgq047" path="res://Assets/Fonts/MMRock9.ttf" id="2_tica0"]
+[ext_resource type="Texture2D" uid="uid://b70cbnorqnejr" path="res://Assets/UI/Energy Bar/health_bar_empty.png" id="3_ivumk"]
+[ext_resource type="Texture2D" uid="uid://c85se1c3qsuud" path="res://Assets/UI/Energy Bar/health_bar_step.png" id="4_stes7"]
+
+[sub_resource type="GDScript" id="GDScript_sr7th"]
+script/source = "extends CanvasLayer
+class_name PlayerUI
+
+@onready var menu_player := $WeaponMenu/AnimationPlayer
+@onready var energy_bars := $EnergyBars
+
+@export var _is_animating: bool = false
+@export var _is_opened: bool = false
+
+@export var player: Player
+
+func _ready() -> void:
+	menu_player.play(\"slide_bars\")
+
+func _process(_delta: float) -> void:
+	if !_is_animating and (player.state != player.STATES.SCROLL and player.state != player.STATES.DEAD and player.state != player.STATES.HURT) \\
+		and Input.is_action_just_pressed(\"weapon_menu\"):
+		if !_is_opened:
+			open_weapon_menu(true)
+		else:
+			open_weapon_menu(false)
+
+func open_weapon_menu(open: bool) -> void:
+	if open:
+		player.menu_opened(true)
+		#get_tree().call_group(\"Player\", \"menu_opened\", true)
+		menu_player.play(\"menu_open\")
+	elif !open:
+		player.menu_opened(false)
+		#get_tree().call_group(\"Player\", \"menu_opened\", false)
+		menu_player.play(\"menu_close\")
+
+func toggle_energy_bars(on: bool) -> void:
+	if on: energy_bars.visible = true
+	else: energy_bars.visible = false
+"
+
+[sub_resource type="Animation" id="Animation_mrcow"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuBG:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 256)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:_is_animating")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("..:_is_opened")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RBusterIcon:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_jg2lc"]
+resource_name = "menu_close"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuBG:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 192), Vector2(0, 256)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:_is_animating")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("..:_is_opened")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.25),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-48, 0), Vector2(0, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RBusterIcon:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_h1fhq"]
+resource_name = "menu_open"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuBG:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 256), Vector2(0, 192)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:_is_animating")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("..:_is_opened")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.25),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-48, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RBusterIcon:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_jy7l3"]
+resource_name = "slide_bars"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../EnergyBars:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-48, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b1d3w"]
+_data = {
+"RESET": SubResource("Animation_mrcow"),
+"menu_close": SubResource("Animation_jg2lc"),
+"menu_open": SubResource("Animation_h1fhq"),
+"slide_bars": SubResource("Animation_jy7l3")
+}
+
+[node name="UI" type="CanvasLayer"]
+script = SubResource("GDScript_sr7th")
+
+[node name="WeaponMenu" type="Node" parent="."]
+
+[node name="MenuBG" type="Sprite2D" parent="WeaponMenu"]
+position = Vector2(0, 256)
+texture = ExtResource("1_rlp4n")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 257, 64)
+
+[node name="RBusterIcon" type="Sprite2D" parent="WeaponMenu"]
+visible = false
+position = Vector2(8, 200)
+texture = ExtResource("2_aos1n")
+centered = false
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 16)
+
+[node name="WeaponNameContainer" type="VBoxContainer" parent="WeaponMenu"]
+visible = false
+offset_left = 32.0
+offset_top = 200.0
+offset_right = 224.0
+offset_bottom = 248.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Slot1" type="Label" parent="WeaponMenu/WeaponNameContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_tica0")
+theme_override_font_sizes/font_size = 8
+text = "R.BUSTER"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponMenu"]
+libraries = {
+"": SubResource("AnimationLibrary_b1d3w")
+}
+
+[node name="EnergyBars" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_right = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthBar" type="TextureProgressBar" parent="EnergyBars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03125
+anchor_right = 0.03125
+offset_left = 16.0
+offset_top = 24.0
+offset_right = 24.0
+offset_bottom = 80.0
+max_value = 28.0
+value = 28.0
+rounded = true
+fill_mode = 3
+texture_under = ExtResource("3_ivumk")
+texture_progress = ExtResource("4_stes7")
+metadata/_edit_use_anchors_ = true
+
+[node name="WeaponBar" type="TextureProgressBar" parent="EnergyBars"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 24.0
+offset_right = 24.0
+offset_bottom = 80.0
+max_value = 28.0
+rounded = true
+fill_mode = 3
+texture_under = ExtResource("3_ivumk")
+texture_progress = ExtResource("4_stes7")
+metadata/_edit_use_anchors_ = true

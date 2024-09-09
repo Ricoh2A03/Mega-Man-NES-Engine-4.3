@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://dse2a3b8xg2pb"]
+[gd_scene load_steps=40 format=3 uid="uid://dse2a3b8xg2pb"]
 
 [ext_resource type="Script" path="res://Scenes/Objects/Player/Mega Man/mega_man.gd" id="1_7awde"]
 [ext_resource type="Resource" uid="uid://brnabtq5xj7wa" path="res://Scenes/Objects/Player/Stat Resource/megaman_stats.tres" id="2_rxfs2"]
@@ -11,14 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://cos64k8hjfusj" path="res://Scenes/Objects/Player/Ladder Detector/ladder_detector.tscn" id="11_ricv3"]
 [ext_resource type="Texture2D" uid="uid://vjtr5gum03mr" path="res://Assets/Playable Characters/Megaman/Sprites/teleport3.png" id="12_o5l52"]
 [ext_resource type="AudioStream" uid="uid://bhbsk6fw4coqx" path="res://Assets/SFX/MegaMan/sfx_mm_explosion.wav" id="14_5xry6"]
+[ext_resource type="PackedScene" uid="uid://b3syn4jy34f3v" path="res://Scenes/Objects/Player/UI/ui.tscn" id="17_08btc"]
 [ext_resource type="AudioStream" uid="uid://drmdx6slnlar8" path="res://Assets/SFX/MegaMan/sfx_mm_land.wav" id="18_2laaq"]
+[ext_resource type="AudioStream" uid="uid://cnxu3xq3d3mms" path="res://Assets/SFX/MegaMan/sfx_menu_open.wav" id="18_ph542"]
 [ext_resource type="AudioStream" uid="uid://dbil5j36jniqx" path="res://Assets/SFX/MegaMan/sfx_teleport_in.wav" id="19_ggfsd"]
 [ext_resource type="AudioStream" uid="uid://bkr860a3quvb4" path="res://Assets/SFX/MegaMan/sfx_teleport_out.wav" id="20_pksg3"]
 [ext_resource type="AudioStream" uid="uid://dadrpgkmqjq01" path="res://Assets/SFX/MegaMan/sfx_mm_damage.wav" id="21_mqxlo"]
-[ext_resource type="Texture2D" uid="uid://bvcct6dy4gdb2" path="res://Assets/UI/Weapon Select/NES - Mega Man 3 - Weapons Menu.png" id="22_y6gh4"]
-[ext_resource type="FontFile" uid="uid://bv7wt3hxgq047" path="res://Assets/Fonts/MMRock9.ttf" id="23_01tdv"]
-[ext_resource type="Texture2D" uid="uid://b70cbnorqnejr" path="res://Assets/UI/Energy Bar/health_bar_empty.png" id="24_gblqf"]
-[ext_resource type="Texture2D" uid="uid://c85se1c3qsuud" path="res://Assets/UI/Energy Bar/health_bar_step.png" id="25_84hd6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v70fv"]
 atlas = ExtResource("8_nliod")
@@ -225,7 +223,7 @@ animations = [{
 size = Vector2(14, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6gvmi"]
-size = Vector2(14, 12)
+size = Vector2(14, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w43mu"]
 size = Vector2(16, 16)
@@ -233,7 +231,7 @@ size = Vector2(16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sr2jw"]
 size = Vector2(4, 25)
 
-[node name="MegaMan" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "step_timer", "slide_timer", "collision_normal", "collision_slide", "snd_land", "snd_teleport_in", "snd_teleport_out", "snd_damage", "snd_death") groups=["Player"]]
+[node name="MegaMan" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "step_timer", "slide_timer", "collision_normal", "collision_slide", "snd_land", "snd_teleport_in", "snd_teleport_out", "snd_damage", "snd_death", "snd_weapon_menu_open") groups=["MenuPaused", "Player"]]
 z_index = 1
 collision_layer = 4
 slide_on_ceiling = false
@@ -250,8 +248,8 @@ snd_teleport_in = NodePath("Sounds/snd_teleport_in")
 snd_teleport_out = NodePath("Sounds/snd_teleport_out")
 snd_damage = NodePath("Sounds/snd_damage")
 snd_death = NodePath("Sounds/snd_death")
+snd_weapon_menu_open = NodePath("Sounds/snd_menu_open")
 can_double_jump = true
-metadata/_edit_group_ = true
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8xjch")
@@ -263,7 +261,6 @@ shape = SubResource("RectangleShape2D_3pimt")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
 
 [node name="Slide" type="CollisionShape2D" parent="."]
-position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_6gvmi")
 disabled = true
 debug_color = Color(0, 0.647059, 0.203922, 0.396078)
@@ -277,10 +274,9 @@ wait_time = 0.32
 one_shot = true
 
 [node name="CeilingDetector" parent="." instance=ExtResource("9_ex5gi")]
-position = Vector2(0, 4)
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CeilingDetector"]
-position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_w43mu")
 
 [node name="LadderDetector" parent="." instance=ExtResource("11_ricv3")]
@@ -314,73 +310,11 @@ stream = ExtResource("14_5xry6")
 volume_db = 6.0
 bus = &"SFX"
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="snd_menu_open" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("18_ph542")
 
-[node name="WeaponSelectMenu" type="Control" parent="UI"]
-layout_mode = 3
-anchors_preset = 0
-metadata/_edit_use_anchors_ = true
-
-[node name="MenuBG" type="Sprite2D" parent="UI/WeaponSelectMenu"]
-position = Vector2(0, 256)
-texture = ExtResource("22_y6gh4")
-centered = false
-region_enabled = true
-region_rect = Rect2(0, 0, 257, 64)
-
-[node name="WeaponNameContainer" type="VBoxContainer" parent="UI/WeaponSelectMenu"]
-visible = false
-layout_mode = 0
-offset_left = 32.0
-offset_top = 200.0
-offset_right = 224.0
-offset_bottom = 248.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Slot1" type="Label" parent="UI/WeaponSelectMenu/WeaponNameContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("23_01tdv")
-theme_override_font_sizes/font_size = 8
-
-[node name="PlayerBars" type="Control" parent="UI"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="HealthBar" type="TextureProgressBar" parent="UI/PlayerBars"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.03125
-anchor_right = 0.03125
-offset_left = 16.0
-offset_top = 24.0
-offset_right = 24.0
-offset_bottom = 80.0
-max_value = 28.0
-value = 28.0
-rounded = true
-fill_mode = 3
-texture_under = ExtResource("24_gblqf")
-texture_progress = ExtResource("25_84hd6")
-metadata/_edit_use_anchors_ = true
-
-[node name="WeaponBar" type="TextureProgressBar" parent="UI/PlayerBars"]
-layout_mode = 1
-anchors_preset = -1
-offset_left = 16.0
-offset_top = 24.0
-offset_right = 24.0
-offset_bottom = 80.0
-max_value = 28.0
-rounded = true
-fill_mode = 3
-texture_under = ExtResource("24_gblqf")
-texture_progress = ExtResource("25_84hd6")
-metadata/_edit_use_anchors_ = true
+[node name="UI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("17_08btc")]
+player = NodePath("..")
 
 [connection signal="timeout" from="StepTimer" to="." method="_on_step_timeout"]
 [connection signal="timeout" from="SlideTimer" to="." method="_on_slide_timeout"]

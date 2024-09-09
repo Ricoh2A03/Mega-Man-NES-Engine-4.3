@@ -24,17 +24,18 @@ signal player_dead()
 
 var weapon_inventory
 
-@export_category("Explosion")
+@export_group("Explosion")
 @export var death_explosion_fx: PackedScene
 
-@export_category("Sound Nodes")
+@export_group("Sound Nodes")
 @export var snd_land: AudioStreamPlayer
 @export var snd_teleport_in: AudioStreamPlayer
 @export var snd_teleport_out: AudioStreamPlayer
 @export var snd_damage: AudioStreamPlayer
 @export var snd_death: AudioStreamPlayer
+@export var snd_weapon_menu_open: AudioStreamPlayer
 
-@export_category("Physics Toggles")
+@export_group("Physics Toggles")
 @export var apply_gravity: bool = true
 @export var allow_movement: bool = true
 @export var can_double_jump: bool = false
@@ -186,7 +187,7 @@ func _process(delta):
 
 				velocity.y += 1
 
-				terminal_Y_velocity()
+				_terminal_Y_velocity()
 
 ##########################################
 
@@ -291,7 +292,7 @@ func _process(delta):
 
 	if Input.is_action_just_pressed("debug_kill_player"): death_proccessing(false)
 
-	stop_at_room_limits()
+	_stop_at_room_limits()
 
 ##########################################
 
@@ -309,13 +310,12 @@ func get_player_state() -> int: return state
 
 ##########################################
 
-func terminal_Y_velocity() -> void: if velocity.y > 448: velocity.y = 448
+func _terminal_Y_velocity() -> void: if velocity.y > 448: velocity.y = 448
 
 ##########################################
 
 func death_proccessing(pit_death: bool = false):
 	if state != STATES.DEAD:
-		state = STATES.DEAD
 		apply_gravity = false
 		allow_movement = false
 		can_double_jump = false
@@ -328,6 +328,7 @@ func death_proccessing(pit_death: bool = false):
 			get_parent().add_sibling(exp_inst)
 			exp_inst.global_position = global_position
 			exp_inst.trigger_explosion.emit()
+		state = STATES.DEAD
 		player_dead.emit()
 
 ##########################################
@@ -377,10 +378,30 @@ func scroll_player(scroll_direction) -> void:
 
 ##########################################
 
-func stop_at_room_limits() -> void:
+func _stop_at_room_limits() -> void:
 	if room_limits == [0, 0, 0, 0]: return
 	if state != STATES.SCROLL:
 		if global_position.x - (collision_normal.shape.size.x / 2) < room_limits[0]:
 			global_position.x = room_limits[0] + (collision_normal.shape.size.x / 2)
 		elif global_position.x + (collision_normal.shape.size.x / 2) > room_limits[2]:
 			global_position.x = room_limits[2] - (collision_normal.shape.size.x / 2)
+
+##########################################
+
+func menu_opened(opened: bool) -> void:
+	if opened:
+		velocity.x = 0
+		velocity.y = 0
+		#self.visible = false
+		sprite.pause()
+		if slide_timer.time_left > 0:
+			slide_timer.paused = true
+		snd_weapon_menu_open.play()
+		apply_gravity = false
+		allow_movement = false
+	elif !opened:
+		#self.visible = true
+		sprite.play()
+		slide_timer.paused = false
+		apply_gravity = true
+		allow_movement = true
