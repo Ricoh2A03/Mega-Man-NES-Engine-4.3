@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://b3syn4jy34f3v"]
+[gd_scene load_steps=13 format=3 uid="uid://b3syn4jy34f3v"]
 
 [ext_resource type="Texture2D" uid="uid://bvcct6dy4gdb2" path="res://Assets/UI/Weapon Select/NES - Mega Man 3 - Weapons Menu.png" id="1_rlp4n"]
-[ext_resource type="Texture2D" uid="uid://c4sotbqljdlsb" path="res://Assets/Projectiles/Special Weapons/rock_buster.png" id="2_aos1n"]
-[ext_resource type="FontFile" uid="uid://bv7wt3hxgq047" path="res://Assets/Fonts/MMRock9.ttf" id="2_tica0"]
+[ext_resource type="FontFile" uid="uid://bv7wt3hxgq047" path="res://Assets/Fonts/MMRock9.ttf" id="2_cwwsl"]
 [ext_resource type="Texture2D" uid="uid://b70cbnorqnejr" path="res://Assets/UI/Energy Bar/health_bar_empty.png" id="3_ivumk"]
+[ext_resource type="Texture2D" uid="uid://c4sotbqljdlsb" path="res://Assets/Projectiles/Special Weapons/rock_buster.png" id="4_ef53p"]
 [ext_resource type="Texture2D" uid="uid://c85se1c3qsuud" path="res://Assets/UI/Energy Bar/health_bar_step.png" id="4_stes7"]
+[ext_resource type="Texture2D" uid="uid://c1g38vgsbmfio" path="res://Assets/UI/Weapon Select/menu_test.png" id="6_sx140"]
 
 [sub_resource type="GDScript" id="GDScript_sr7th"]
 script/source = "extends CanvasLayer
@@ -22,12 +23,13 @@ func _ready() -> void:
 	menu_player.play(\"slide_bars\")
 
 func _process(_delta: float) -> void:
-	if !_is_animating and (player.state != player.STATES.SCROLL and player.state != player.STATES.DEAD and player.state != player.STATES.HURT) \\
-		and Input.is_action_just_pressed(\"weapon_menu\"):
-		if !_is_opened:
-			open_weapon_menu(true)
-		else:
-			open_weapon_menu(false)
+	if player:
+		if !_is_animating and (player.state != player.STATES.SCROLL and player.state != player.STATES.DEAD and player.state != player.STATES.HURT) \\
+			and Input.is_action_just_pressed(\"weapon_menu\"):
+			if !_is_opened:
+				open_weapon_menu(true)
+			else:
+				open_weapon_menu(false)
 
 func open_weapon_menu(open: bool) -> void:
 	if open:
@@ -38,6 +40,9 @@ func open_weapon_menu(open: bool) -> void:
 		player.menu_opened(false)
 		#get_tree().call_group(\"Player\", \"menu_opened\", false)
 		menu_player.play(\"menu_close\")
+
+func add_item(item: InventoryItem):
+	pass
 
 func toggle_energy_bars(on: bool) -> void:
 	if on: energy_bars.visible = true
@@ -61,7 +66,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/path = NodePath("..:_is_animating")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -73,7 +78,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("..:_is_animating")
+tracks/2/path = NodePath("..:_is_opened")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -85,38 +90,26 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("..:_is_opened")
+tracks/3/path = NodePath("ItemContainer:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [Vector2(0, 64)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/path = NodePath("../EnergyBars:size")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("RBusterIcon:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"values": [Vector2(256, 256)]
 }
 
 [sub_resource type="Animation" id="Animation_jg2lc"]
@@ -138,62 +131,50 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/path = NodePath("..:_is_animating")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("..:_is_animating")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("..:_is_opened")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:_is_opened")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0.25),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../EnergyBars:position")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-48, 0), Vector2(0, 0)]
+}
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/path = NodePath("ItemContainer:position")
 tracks/4/interp = 2
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(-48, 0), Vector2(0, 0)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("RBusterIcon:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"values": [Vector2(0, 0), Vector2(0, 64)]
 }
 
 [sub_resource type="Animation" id="Animation_h1fhq"]
@@ -215,62 +196,50 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("WeaponNameContainer:visible")
+tracks/1/path = NodePath("..:_is_animating")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("..:_is_animating")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("..:_is_opened")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:_is_opened")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0.25),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../EnergyBars:position")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-48, 0)]
+}
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../EnergyBars:position")
+tracks/4/path = NodePath("ItemContainer:position")
 tracks/4/interp = 2
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-48, 0)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("RBusterIcon:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
+"values": [Vector2(0, 64), Vector2(0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_jy7l3"]
@@ -301,6 +270,12 @@ _data = {
 [node name="UI" type="CanvasLayer"]
 script = SubResource("GDScript_sr7th")
 
+[node name="MenuTest" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(128, 224)
+texture = ExtResource("6_sx140")
+metadata/_edit_lock_ = true
+
 [node name="WeaponMenu" type="Node" parent="."]
 
 [node name="MenuBG" type="Sprite2D" parent="WeaponMenu"]
@@ -310,27 +285,82 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 257, 64)
 
-[node name="RBusterIcon" type="Sprite2D" parent="WeaponMenu"]
-visible = false
-position = Vector2(8, 200)
-texture = ExtResource("2_aos1n")
-centered = false
+[node name="ItemContainer" type="Node2D" parent="WeaponMenu"]
+position = Vector2(0, 64)
+metadata/_edit_group_ = true
+
+[node name="WeaponNames" type="Node2D" parent="WeaponMenu/ItemContainer"]
+
+[node name="Slot1" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 56.0
+offset_top = 208.0
+offset_right = 120.0
+offset_bottom = 217.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+text = "R.BUSTER"
+
+[node name="Slot2" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 56.0
+offset_top = 224.0
+offset_right = 120.0
+offset_bottom = 233.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+
+[node name="Slot3" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 56.0
+offset_top = 240.0
+offset_right = 120.0
+offset_bottom = 249.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+
+[node name="Slot4" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 144.0
+offset_top = 208.0
+offset_right = 208.0
+offset_bottom = 217.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+
+[node name="Slot5" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 144.0
+offset_top = 224.0
+offset_right = 208.0
+offset_bottom = 233.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+
+[node name="Slot6" type="Label" parent="WeaponMenu/ItemContainer/WeaponNames"]
+offset_left = 144.0
+offset_top = 240.0
+offset_right = 208.0
+offset_bottom = 249.0
+theme_override_fonts/font = ExtResource("2_cwwsl")
+theme_override_font_sizes/font_size = 8
+
+[node name="ItemIcons" type="Node2D" parent="WeaponMenu/ItemContainer"]
+
+[node name="Icon1" type="Sprite2D" parent="WeaponMenu/ItemContainer/ItemIcons"]
+position = Vector2(40, 208)
+texture = ExtResource("4_ef53p")
 region_enabled = true
 region_rect = Rect2(16, 0, 16, 16)
 
-[node name="WeaponNameContainer" type="VBoxContainer" parent="WeaponMenu"]
-visible = false
-offset_left = 32.0
-offset_top = 200.0
-offset_right = 224.0
-offset_bottom = 248.0
-metadata/_edit_use_anchors_ = true
+[node name="EnergyBars" type="Node2D" parent="WeaponMenu/ItemContainer"]
 
-[node name="Slot1" type="Label" parent="WeaponMenu/WeaponNameContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_tica0")
-theme_override_font_sizes/font_size = 8
-text = "R.BUSTER"
+[node name="ItemBar1" type="TextureProgressBar" parent="WeaponMenu/ItemContainer/EnergyBars"]
+offset_left = 112.0
+offset_top = 200.0
+offset_right = 120.0
+offset_bottom = 256.0
+rotation = 1.5708
+max_value = 28.0
+value = 28.0
+fill_mode = 3
+texture_under = ExtResource("3_ivumk")
+texture_progress = ExtResource("4_stes7")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponMenu"]
 libraries = {
@@ -347,6 +377,7 @@ offset_right = -48.0
 grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="HealthBar" type="TextureProgressBar" parent="EnergyBars"]
 layout_mode = 1

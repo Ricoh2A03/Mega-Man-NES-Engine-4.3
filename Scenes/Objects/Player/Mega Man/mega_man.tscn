@@ -105,7 +105,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"climb",
-"speed": 7.5
+"speed": 6.5
 }, {
 "frames": [{
 "duration": 1.0,
@@ -223,7 +223,7 @@ animations = [{
 size = Vector2(14, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6gvmi"]
-size = Vector2(14, 22)
+size = Vector2(14, 14)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w43mu"]
 size = Vector2(16, 16)
@@ -256,11 +256,11 @@ sprite_frames = SubResource("SpriteFrames_8xjch")
 animation = &"energy_form"
 
 [node name="Normal" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("RectangleShape2D_3pimt")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
 
 [node name="Slide" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_6gvmi")
 disabled = true
 debug_color = Color(0, 0.647059, 0.203922, 0.396078)

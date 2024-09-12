@@ -28,7 +28,7 @@ var current_checkpoint: Checkpoint
 ##Path to Camera node to instatiate.
 @export var camera_path: PackedScene
 
-@onready var stage_ui = $ReadyText
+@onready var stage_ui = $StageUI
 
 ###########################################
 
